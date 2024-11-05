@@ -1,7 +1,5 @@
 import httpx
 from pathlib import Path
-import os
-import hashlib
 import zipfile
 import pandas as pd
 
@@ -26,6 +24,10 @@ def create_dataset():
     return pd.read_csv(dataset_path)
 
 
-if __name__ == "__main__":
+def sample_dataset():
     df = create_dataset()
-    print(df)
+    rs = 3267189
+    train_df = df.sample(frac=0.7, random_state=rs)
+    tune_df = df.drop(train_df.index)
+
+    return train_df, tune_df
