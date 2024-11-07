@@ -1,27 +1,18 @@
-import httpx
-from pathlib import Path
-import zipfile
+import kagglehub
 import pandas as pd
 
 
-def create_dataset():
-    dataset_path = Path("healthcare-dataset-stroke-data.csv")
+def create_dataset(raw=False):
+    dataset_path = kagglehub.dataset_download("fedesoriano/stroke-prediction-dataset")
 
-    if dataset_path.exists():
-        return pd.read_csv(dataset_path)
+    df = pd.read_csv(dataset_path)
 
-    url = "https://www.kaggle.com/api/v1/datasets/download/fedesoriano/stroke-prediction-dataset"
-    response = httpx.get(url, follow_redirects=True)
+    if raw:
+        return df
 
-    archive_path = Path("/tmp/stroke-prediction-dataset.zip")
+    df["bmi"] = df["bmi"].fillna(df["bmi"].median())
 
-    with open(archive_path, "wb") as f:
-        f.write(response.content)
-
-    with zipfile.ZipFile(archive_path, "r") as zip_ref:
-        zip_ref.extractall(".")
-
-    return pd.read_csv(dataset_path)
+    return df
 
 
 def sample_dataset():
