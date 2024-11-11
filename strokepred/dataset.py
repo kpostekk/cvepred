@@ -21,7 +21,30 @@ def create_dataset(raw=False):
     if raw:
         return df
 
+    # Drop id
+    df = df.drop(columns=["id"])
+
+    # Fill missing bmi values
     df["bmi"] = df["bmi"].fillna(df["bmi"].median())
+
+    # Remove "Other"
+    df = df[df['gender'] != 'Other']
+    # df["gender"] = df["gender"].isin(["Male", "Female"])
+
+    # Remove bmi outliers
+    df = df[df["bmi"] < 65]
+
+    # Remap ever married into boolean values
+    df["ever_married"] = df["ever_married"] == "Yes"
+
+    # Remap hypertension into boolean values
+    df["hypertension"] = df["hypertension"] == 1
+
+    # Remap heart_disease into boolean values
+    df["heart_disease"] = df["heart_disease"] == 1
+
+    # Remap stroke into boolean values
+    df["stroke"] = df["stroke"] == 1
 
     return df
 
@@ -45,7 +68,10 @@ def create_train_dataset():
     y = train_df["stroke"]
     X_balanced, y_balanced = smote.fit_resample(X, y)
     df_balanced = pd.concat(
-        [pd.DataFrame(X_balanced, columns=X.columns), pd.Series(y_balanced, name="stroke")],
+        [
+            pd.DataFrame(X_balanced, columns=X.columns),
+            pd.Series(y_balanced, name="stroke"),
+        ],
         axis=1,
     )
 
