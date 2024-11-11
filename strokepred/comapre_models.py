@@ -13,9 +13,10 @@ s = setup(
     preprocess=False,
 )
 
-best_model = s.compare_models(
+best_models = s.compare_models(
     # Following models are not Turbo comp
     # exclude=["rbfsvm", "gpc", "mlp", "et", "lda", "gbc"]
+    # Choosing lightweight models
     include=[
         "catboost",
         "lr",
@@ -32,6 +33,7 @@ best_model = s.compare_models(
         "et",
     ],
     verbose=False,
+    n_select=3,
 )
 
 model_comparison = s.pull()
