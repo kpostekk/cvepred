@@ -4,6 +4,6 @@ services:
       context: .
       dockerfile: Dockerfile
       target: notebook
-    image: s24477/strokepred:notebook:notebook
+    image: s24477/strokepred:notebook
     ports:
       - 8888:8888
