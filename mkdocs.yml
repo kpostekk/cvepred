@@ -1,0 +1,19 @@
+site_name: strokepred docs
+
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: purple
+    accent: pink
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.snippets
+
+
+plugins:
+  - search
+  - with-pdf
