@@ -163,3 +163,4 @@ cython_debug/
 
 # Project
 healthcare-dataset-stroke-data.csv
+catboost_info/
