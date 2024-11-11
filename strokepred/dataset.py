@@ -1,9 +1,16 @@
 import kagglehub
 import pandas as pd
+from pathlib import Path
 
 
 def create_dataset(raw=False):
+    """
+    Returns the stroke prediction dataset.
+
+    """
     dataset_path = kagglehub.dataset_download("fedesoriano/stroke-prediction-dataset")
+
+    dataset_path = Path(dataset_path) / "healthcare-dataset-stroke-data.csv"
 
     df = pd.read_csv(dataset_path)
 
