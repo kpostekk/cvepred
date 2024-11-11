@@ -1,3 +1,5 @@
+**[Dokumentacja](https://asi.z36.web.core.windows.net/) | [Analiza EDA](https://github.com/PJATK-ASI-2024/24477_StorkePred/blob/main/eda.ipynb) | [Wykorzystanie modelu](https://github.com/PJATK-ASI-2024/24477_StorkePred/blob/main/strokrepred.ipynb)**
+
 # Predykcja Udarów Mózgu
 
 Celem tego projektu jest opracowanie modelu predykcyjnego, który na podstawie danych medycznych i demograficznych będzie w stanie oszacować prawdopodobieństwo wystąpienia udaru u pacjenta.
