@@ -1,6 +1,9 @@
 services:
   notebook:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: notebook
     image: s24477/strokepred:notebook:notebook
     ports:
       - 8888:8888

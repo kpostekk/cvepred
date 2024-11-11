@@ -36,4 +36,7 @@ jobs:
         with:
           push: true
           tags: s24477/strokepred:notebook
+          target: jupyter
           context: .
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
