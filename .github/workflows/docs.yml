@@ -1,0 +1,33 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - docs/**/*
+      - .github/workflows/docs.yml
+
+jobs:
+  create-container:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11.10'
+
+      - name: Setup poetry
+        run: |
+          pip install poetry
+          poetry config virtualenvs.create false
+
+      - name: Install dependencies
+        run: |
+          poetry install --with docs
+          poetry run mkdocs build
+
+      - name: Deploy
+        run: mkdocs gh-deploy
+
