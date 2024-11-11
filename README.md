@@ -1,4 +1,4 @@
-**[Dokumentacja](https://asi.z36.web.core.windows.net/) | [Analiza EDA](https://github.com/PJATK-ASI-2024/24477_StorkePred/blob/main/eda.ipynb) | [Wykorzystanie modelu](https://github.com/PJATK-ASI-2024/24477_StorkePred/blob/main/strokrepred.ipynb)**
+**[Dokumentacja](https://asi.z36.web.core.windows.net/) | [PDF](https://asi.z36.web.core.windows.net/pdf/document.pdf) | [Analiza EDA](https://github.com/PJATK-ASI-2024/24477_StorkePred/blob/main/eda.ipynb) | [Wykorzystanie modelu](https://github.com/PJATK-ASI-2024/24477_StorkePred/blob/main/strokrepred.ipynb)**
 
 # Predykcja Udarów Mózgu
 

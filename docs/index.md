@@ -1,3 +1,5 @@
+*[Dokumentacja w formie PDF](pdf/document.pdf)*
+
 # Predykcja Udarów Mózgu
 
 Celem tego projektu jest opracowanie modelu predykcyjnego, który na podstawie danych medycznych i demograficznych będzie w stanie oszacować prawdopodobieństwo wystąpienia udaru u pacjenta.
