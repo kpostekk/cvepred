@@ -1,8 +1,8 @@
 ---
-title: Zbiory danych
+title: Zbiór danych
 ---
 
-# Nieprzetworzone dane
+# Zbiór danych
 
 !!! note
 
@@ -57,9 +57,9 @@ SMOTE zostało zaimplementowane przy pomocy biblioteki `imbalanced-learn`.
     --8<-- "strokepred/dataset.py:docs_balanced_dataset"
     ```
 
-# Pozostałe wnioski
+## Pozostałe wnioski
 
-## Konfiguracja Pycaret
+### Konfiguracja Pycaret
 
 Po wykonaniu ręcznej inżynierii cech trzeba wyłączyć preprocesing w Pycaret.
 
@@ -72,5 +72,3 @@ setup(..., preprocess=False)
 > **preprocess: bool, default = True**
 
 > When set to False, no transformations are applied except for train_test_split and custom transformations passed in custom_pipeline param. Data must be ready for modeling (no missing values, no dates, categorical data encoding), when preprocess is set to False.
-
-## Wnioski z EDA
