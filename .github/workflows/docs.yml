@@ -7,7 +7,7 @@ on:
       - .github/workflows/docs.yml
 
 jobs:
-  create-container:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,7 +27,3 @@ jobs:
         run: |
           poetry install --with docs
           poetry run mkdocs build
-
-      - name: Deploy
-        run: mkdocs gh-deploy
-
