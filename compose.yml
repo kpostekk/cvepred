@@ -1,6 +1,6 @@
 services:
   notebook:
     build: .
-    image: ghcr.io/S24477AleksandraInd/strokepred:notebook
+    image: s24477/strokepred:notebook:notebook
     ports:
       - 8888:8888
