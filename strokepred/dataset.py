@@ -7,20 +7,12 @@ from imblearn.over_sampling import SMOTE
 RANDOM_STATE = 455612378
 
 
-def create_dataset(raw=False):
+def sanitize_dataset(df: pd.DataFrame):
     """
-    Returns the stroke prediction dataset.
-
+    Removes outliers and fills missing values in the dataset.
+    Also perform remaps on int values to boolean values (if possible).
+    Based on results from the EDA notebook.
     """
-    dataset_path = kagglehub.dataset_download("fedesoriano/stroke-prediction-dataset")
-
-    dataset_path = Path(dataset_path) / "healthcare-dataset-stroke-data.csv"
-
-    df = pd.read_csv(dataset_path)
-
-    if raw:
-        return df
-
     # Drop id
     df = df.drop(columns=["id"])
 
@@ -49,7 +41,30 @@ def create_dataset(raw=False):
     return df
 
 
+def create_dataset(raw=False):
+    """
+    Returns the stroke prediction dataset.
+    """
+    dataset_path = kagglehub.dataset_download("fedesoriano/stroke-prediction-dataset")
+
+    dataset_path = Path(dataset_path) / "healthcare-dataset-stroke-data.csv"
+
+    df = pd.read_csv(dataset_path)
+
+    if raw:
+        return df
+
+    # Drop id
+    df = sanitize_dataset(df)
+
+    return df
+
+
 def sample_dataset():
+    """
+    Splits the dataset into a training and tuning set.
+    Performs one-hot encoding on the dataset.
+    """
     df = create_dataset()
     df = pd.get_dummies(df)
 
@@ -60,6 +75,9 @@ def sample_dataset():
 
 
 def create_train_dataset():
+    """
+    Performs SMOTE on the dataset and returns a training and testing set.
+    """
     (train_df, _) = sample_dataset()
 
     # balance the dataset
