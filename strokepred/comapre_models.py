@@ -1,6 +1,6 @@
 from pycaret.classification import setup
 
-from ..dataset import create_train_dataset, RANDOM_STATE
+from .dataset import create_train_dataset, RANDOM_STATE
 
 (df_train, df_test) = create_train_dataset()
 
@@ -34,5 +34,7 @@ best_model = s.compare_models(
     verbose=False,
 )
 
+model_comparison = s.pull()
+
 if __name__ == "__main__":
-    print(s.pull())
+    print(model_comparison)

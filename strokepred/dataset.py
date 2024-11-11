@@ -20,7 +20,7 @@ def sanitize_dataset(df: pd.DataFrame):
     df["bmi"] = df["bmi"].fillna(df["bmi"].median())
 
     # Remove "Other"
-    df = df[df['gender'] != 'Other']
+    df = df[df["gender"] != "Other"]
     # df["gender"] = df["gender"].isin(["Male", "Female"])
 
     # Remove bmi outliers
@@ -60,7 +60,7 @@ def create_dataset(raw=False):
     return df
 
 
-def sample_dataset():
+def split_encoded_dataset():
     """
     Splits the dataset into a training and tuning set.
     Performs one-hot encoding on the dataset.
@@ -74,11 +74,11 @@ def sample_dataset():
     return train_df, tune_df
 
 
-def create_train_dataset():
+def preprocess_dataset():
     """
     Performs SMOTE on the dataset and returns a training and testing set.
     """
-    (train_df, _) = sample_dataset()
+    (train_df, _) = split_encoded_dataset()
 
     # balance the dataset
     smote = SMOTE(random_state=RANDOM_STATE)
@@ -93,6 +93,11 @@ def create_train_dataset():
         axis=1,
     )
 
+    return df_balanced
+
+
+def create_train_dataset():
+    df_balanced = preprocess_dataset()
     df_balanced_train = df_balanced.sample(frac=0.7, random_state=RANDOM_STATE)
     df_balanced_test = df_balanced.drop(df_balanced_train.index)
 
