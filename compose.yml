@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: notebook
+      target: jupyter
     image: s24477/strokepred:notebook
     ports:
       - 8888:8888
