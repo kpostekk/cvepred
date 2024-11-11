@@ -74,7 +74,8 @@ def split_encoded_dataset():
     return train_df, tune_df
 
 
-def preprocess_dataset():
+# --8<-- [start:docs_balanced_dataset]
+def balanced_dataset():
     """
     Performs SMOTE on the dataset and returns a training and testing set.
     """
@@ -96,8 +97,11 @@ def preprocess_dataset():
     return df_balanced
 
 
+# --8<-- [end:docs_balanced_dataset]
+
+
 def create_train_dataset():
-    df_balanced = preprocess_dataset()
+    df_balanced = balanced_dataset()
     df_balanced_train = df_balanced.sample(frac=0.7, random_state=RANDOM_STATE)
     df_balanced_test = df_balanced.drop(df_balanced_train.index)
 
