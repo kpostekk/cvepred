@@ -4,6 +4,6 @@ services:
       context: .
       dockerfile: Dockerfile
       target: jupyter
-    image: s24477/strokepred:notebook
+    image: s24477/cvepred:notebook
     ports:
       - 8888:8888

@@ -5,7 +5,7 @@ title: Tworzenie modelu
 # Tworzenie modelu
 
 !!! tip
-    Na podstawie `strokepred/compare_models.py` oraz `strokepred.ipynb`
+    Na podstawie `cvepred/compare_models.py` oraz `cvepred.ipynb`
 
 ## Porównanie modeli
 
@@ -49,5 +49,5 @@ Na postawie powyższych wyników możemy wybrać model **Random Forest Classifi
     Model można ręcznie przetestować uruchamiając ipynb w dockerze
 
     ```
-    docker run -it --rm -p 8888:8888 s24477/strokepred:notebook
+    docker run -it --rm -p 8888:8888 s24477/cvepred:notebook
     ```

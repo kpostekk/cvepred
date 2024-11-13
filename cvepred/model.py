@@ -13,4 +13,4 @@ s = setup(
     preprocess=False,
 )
 
-strokepred_model = s.create_model("rf", verbose=False)
+cvepred_model = s.create_model("rf", verbose=False)

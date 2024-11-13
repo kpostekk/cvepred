@@ -1,9 +1,10 @@
 [tool.poetry]
-name = "strokepred"
-version = "0.1.0"
+name = "cvepred"
+version = "0.1.0"   
 description = ""
 authors = ["Your Name <you@example.com>"]
 readme = "README.md"
+packages = [{ include = "cvepred" }, { include = "cvepred.*" }]
 
 [tool.poetry.dependencies]
 python = "3.11.10"

@@ -6,7 +6,7 @@ title: Zbiór danych
 
 !!! note
 
-    Na podstawie `strokepred/dataset.py` oraz `eda.ipynb`
+    Na podstawie `cvepred/dataset.py` oraz `eda.ipynb`
 
 ## Ogólny opis zbioru
 
@@ -54,7 +54,7 @@ SMOTE zostało zaimplementowane przy pomocy biblioteki `imbalanced-learn`.
 !!! example "Implementacja"
 
     ```python title="dataset.py"
-    --8<-- "strokepred/dataset.py:docs_balanced_dataset"
+    --8<-- "cvepred/dataset.py:docs_balanced_dataset"
     ```
 
 ## Pozostałe wnioski

@@ -3,7 +3,7 @@ on:
     branches:
       - main
     paths:
-      - strokepred/**/*
+      - cvepred/**/*
       - Dockerfile
       - "*.ipynb"
       - pyproject.toml
@@ -35,7 +35,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: s24477/strokepred:notebook
+          tags: s24477/cvepred:notebook
           target: jupyter
           context: .
           cache-from: type=gha

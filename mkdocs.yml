@@ -1,4 +1,4 @@
-site_name: strokepred docs
+site_name: cvepred docs
 
 theme:
   name: material
