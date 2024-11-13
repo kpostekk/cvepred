@@ -18,11 +18,3 @@ COPY poetry.lock pyproject.toml /app/
 RUN poetry install
 
 COPY cvepred /app/cvepred
-
-FROM base AS jupyter
-
-RUN poetry install --with notebook
-
-COPY eda.ipynb strokrepred.ipynb /app/
-
-CMD ["poetry", "run", "jupyter", "notebook", "--ip=0.0.0.0"]
