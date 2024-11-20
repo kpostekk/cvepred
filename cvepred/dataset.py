@@ -107,7 +107,7 @@ def create_train_datasets():
     print("Encoding dataset...")
     df_encoded = pd.get_dummies(df, dtype=int)
     print("Balancing dataset...")
-    df_balanced = balanced_dataset(df_encoded, method="oversample")
+    df_balanced = balanced_dataset(df_encoded, method="undersample")
     print("Splitting dataset...")
     df_balanced_train, xdf_balanced_test = split_datasets(df_balanced)
     print("Datasets created")

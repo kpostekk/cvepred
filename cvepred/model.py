@@ -13,4 +13,7 @@ s = setup(
     preprocess=False,
 )
 
-cvepred_model = s.create_model("svm", verbose=False)
+cvepred_model = s.create_model("rf", verbose=False)
+
+if __name__ == "__main__":
+    print(s.pull())
