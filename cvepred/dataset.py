@@ -1,88 +1,115 @@
-from pathlib import Path
-
-import kagglehub
 import pandas as pd
-from imblearn.over_sampling import SMOTE
-from .nvd import CACHE_PATH
+from imblearn.over_sampling import SMOTE, RandomOverSampler, ADASYN
+import typing
 
-RANDOM_STATE = 74328
+from .nvd import create_sources
 
-
-def sanitize_dataset(df: pd.DataFrame):
-
-    return df
+RANDOM_STATE = 564127
 
 
-def create_dataset(raw=False):
+def create_dataset():
     """
     Returns the cve exploit prediction dataset.
+
+    Performs a left join between the NVD and CISA KEV datasets.
+    ``cve_id`` is the index. ``hasExploit`` is the target variable.
     """
-    nvd_path = CACHE_PATH / "nvds.csv"
-    nvd_df = pd.read_csv(nvd_path)
+    nvd_df, cisa_kev_df = create_sources()
 
-    print(nvd_df.columns)
+    # Select only the cveID column
+    cisa_kev_df = cisa_kev_df[["cveID"]].rename(columns={"cveID": "cve_cisa_id"})
+    cisa_kev_df["hasExploit"] = True
 
-    cisa_kev_path = CACHE_PATH / "cisa_kev.csv"
-    cisa_kev_df = pd.read_csv(cisa_kev_path)
+    df = (
+        pd.merge(
+            nvd_df,
+            cisa_kev_df,
+            how="left",
+            left_on="cve_nvd_id",
+            right_on="cve_cisa_id",
+        ).drop(
+            columns=[
+                "cve_nvd_id",
+                "cve_cisa_id",
+                "vectorString",
+                "baseScore",
+                "baseSeverity",
+            ]
+        )
+        # .rename(columns={"cve_nvd_id": "cve_id"})
+    )
 
-    print(cisa_kev_df.columns)
+    df["hasExploit"] = df["hasExploit"].fillna(False)
+    # df = df.set_index("cve_id")
 
-    df = nvd_df.join(cisa_kev_df.set_index("cveID"), on="cve_nvd_id", how="left")
+    # Categorical columns
+    cat_columns_names = [name for name in df.columns if name not in ["hasExploit"]]
 
-    print(df.columns)
+    for cat_column_name in cat_columns_names:
+        df[cat_column_name] = pd.Categorical(df[cat_column_name])
 
-    if raw:
-        return df
-
-    # Drop id
-    df = sanitize_dataset(df)
+    # Remove duplicates
+    df = df[~df.index.duplicated(keep="first")]
 
     return df
 
 
-def split_encoded_dataset():
+def balanced_dataset(
+    df: pd.DataFrame, method: typing.Literal["oversample", "undersample"] = "oversample"
+):
     """
-    Splits the dataset into a training and tuning set.
-    Performs one-hot encoding on the dataset.
+    Performs ASASYN on the dataset and returns a balanced dataset.
     """
-    df = create_dataset()
-    df = pd.get_dummies(df)
+    match method:
+        case "oversample":
+            smote = ADASYN(random_state=RANDOM_STATE)
+            X = df.drop(columns=["hasExploit"])
+            y = df["hasExploit"]
 
-    train_df = df.sample(frac=0.7, random_state=RANDOM_STATE)
-    tune_df = df.drop(train_df.index)
+            X_resampled, y_resampled = smote.fit_resample(X, y)
+            df_balanced = pd.concat([X_resampled, y_resampled], axis=1)
 
-    return train_df, tune_df
+            return df_balanced
+        case "undersample":
+            has_exploit_records = df[df["hasExploit"] == True]
+            no_exploit_records = df[df["hasExploit"] == False].sample(
+                n=len(has_exploit_records), random_state=RANDOM_STATE
+            )
+
+            df_balanced = pd.concat([has_exploit_records, no_exploit_records])
+
+            return df_balanced
+        case _:
+            raise ValueError("Invalid method")
 
 
-def balanced_dataset():
-    """
-    Performs SMOTE on the dataset and returns a training and testing set.
-    """
-    (train_df, _) = split_encoded_dataset()
-
-    # balance the dataset
-    smote = SMOTE(random_state=RANDOM_STATE)
-    X = train_df.drop("hasExploit", axis=1)
-    y = train_df["hasExploit"]
-    X_balanced, y_balanced = smote.fit_resample(X, y)
-    df_balanced = pd.concat(
-        [
-            pd.DataFrame(X_balanced, columns=X.columns),
-            pd.Series(y_balanced, name="hasExploit"),
-        ],
-        axis=1,
+def split_datasets(df: pd.DataFrame):
+    df_test_true = df[df["hasExploit"] == True].sample(
+        frac=0.08, random_state=RANDOM_STATE
+    )
+    df_test_false = df[df["hasExploit"] == False].sample(
+        frac=0.12, random_state=RANDOM_STATE
     )
 
-    return df_balanced
+    df_test = pd.concat([df_test_true, df_test_false])
+
+    df_train = df.drop(df_test.index)
+
+    # df_train = df.sample(frac=0.7, random_state=RANDOM_STATE)
+    # df_test = df.drop(df_train.index)
+
+    return df_train, df_test
 
 
-def create_train_dataset():
-    df_balanced = balanced_dataset()
-    df_balanced_train = df_balanced.sample(frac=0.7, random_state=RANDOM_STATE)
-    df_balanced_test = df_balanced.drop(df_balanced_train.index)
+def create_train_datasets():
+    print("Creating datasets...")
+    df = create_dataset()
+    print("Encoding dataset...")
+    df_encoded = pd.get_dummies(df, dtype=int)
+    print("Balancing dataset...")
+    df_balanced = balanced_dataset(df_encoded, method="oversample")
+    print("Splitting dataset...")
+    df_balanced_train, xdf_balanced_test = split_datasets(df_balanced)
+    print("Datasets created")
 
-    return df_balanced_train, df_balanced_test
-
-if __name__ == "__main__":
-    x = create_dataset(raw=True)
-    print(x)
+    return df_balanced_train, xdf_balanced_test

@@ -1,7 +1,8 @@
-from glob import glob
 import gzip
 import json
+from glob import glob
 from pathlib import Path
+
 import httpx
 import pandas as pd
 
@@ -9,6 +10,12 @@ CACHE_PATH = Path.home() / ".cache" / "cvepred"
 
 
 def create_sources():
+    """
+    Downloads the NVD and CISA KEV data sources and returns them as dataframes.
+    To reset the cache, delete the ~/.cache/cvepred directory.
+
+    :return: Tuple of NVD and CISA KEV dataframes.
+    """
     if not CACHE_PATH.exists():
         CACHE_PATH.mkdir(parents=True)
 
@@ -36,42 +43,44 @@ def create_sources():
             with open(nvd_path, "wb") as f:
                 f.write(response.content)
 
-    # Merge nvds
-    downloaded_nvds = glob(str(CACHE_PATH / "nvdcve-1.1-*.json.gz"))
+    nvds_path = CACHE_PATH / "nvds.csv"
 
-    nvds_records = []
+    if not nvds_path.exists():
+        # Merge nvds
+        downloaded_nvds = glob(str(CACHE_PATH / "nvdcve-1.1-*.json.gz"))
 
-    for downloaded_nvd in downloaded_nvds:
-        with gzip.open(downloaded_nvd, "rb") as f:
-            payload = json.load(f)
+        nvds_records = []
 
-        nvds_records.extend(payload["CVE_Items"])
+        for downloaded_nvd in downloaded_nvds:
+            with gzip.open(downloaded_nvd, "rb") as f:
+                payload = json.load(f)
 
-    def filter_nvd_v3(row):
-        try:
-            return row["impact"]["baseMetricV3"]["cvssV3"]["baseScore"] > 0
-        except KeyError:
-            return False
+            nvds_records.extend(payload["CVE_Items"])
 
-    nvds_records = list(filter(filter_nvd_v3, nvds_records))
+        def filter_nvd_v3(row):
+            try:
+                return row["impact"]["baseMetricV3"]["cvssV3"]["baseScore"] > 0
+            except KeyError:
+                return False
 
-    def map_nvd_v3(record):
-        cve_id = record["cve"]["CVE_data_meta"]["ID"]
-        cvss3 = record["impact"]["baseMetricV3"]["cvssV3"]
-        mapped_record = {
-            "cve_nvd_id": cve_id,
-            **cvss3,
-        }
+        nvds_records = list(filter(filter_nvd_v3, nvds_records))
 
-        del mapped_record["version"]
+        def map_nvd_v3(record):
+            cve_id = record["cve"]["CVE_data_meta"]["ID"]
+            cvss3 = record["impact"]["baseMetricV3"]["cvssV3"]
+            mapped_record = {
+                "cve_nvd_id": cve_id,
+                **cvss3,
+            }
 
-        return mapped_record
+            del mapped_record["version"]
 
-    nvds_records = list(map(map_nvd_v3, nvds_records))
+            return mapped_record
 
-    df = pd.DataFrame(nvds_records)
+        nvds_records = list(map(map_nvd_v3, nvds_records))
 
-    df.to_csv(CACHE_PATH / "nvds.csv", index=False)
+        df = pd.DataFrame(nvds_records)
 
-if __name__ == "__main__":
-    create_sources()
+        df.to_csv(nvd_path, index=False)
+
+    return pd.read_csv(nvds_path), pd.read_csv(cisa_kev_path)

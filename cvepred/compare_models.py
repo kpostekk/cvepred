@@ -1,15 +1,19 @@
 from pycaret.classification import setup
 
-from .dataset import create_train_dataset, RANDOM_STATE
+from .dataset import RANDOM_STATE, create_train_datasets
 
-(df_train, df_test) = create_train_dataset()
+print("Datasets loading...")
+
+(df_train, df_test) = create_train_datasets()
+
+print("Datasets loaded")
 
 s = setup(
     data=df_train,
     test_data=df_test,
-    target="stroke",
+    target="hasExploit",
     session_id=RANDOM_STATE,
-    verbose=False,
+    # verbose=False,
     preprocess=False,
 )
 
@@ -18,9 +22,9 @@ best_models = s.compare_models(
     # exclude=["rbfsvm", "gpc", "mlp", "et", "lda", "gbc"]
     # Choosing lightweight models
     include=[
-        "catboost",
+        # "catboost",
         "lr",
-        "knn",
+        # "knn",
         "nb",
         "dt",
         "svm",
@@ -32,8 +36,8 @@ best_models = s.compare_models(
         "lda",
         "et",
     ],
-    verbose=False,
-    n_select=3,
+    # verbose=False,
+    # n_select=3,
 )
 
 model_comparison = s.pull()
