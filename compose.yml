@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: jupyter
-    image: s24477/cvepred:notebook
+      target: api
+    image: kpostekk/cvepred:notebook
     ports:
-      - 8888:8888
+      - 8000:8000

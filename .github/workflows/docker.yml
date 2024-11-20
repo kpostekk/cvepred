@@ -35,7 +35,7 @@ jobs:
         with:
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/cvepred:base
-          target: base
+          target: api
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
