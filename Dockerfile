@@ -19,12 +19,12 @@ COPY poetry.lock pyproject.toml /app/
 
 RUN poetry config virtualenvs.in-project true
 
-RUN poetry install
+RUN poetry install --only main
 
 COPY cvepred /app/cvepred
 
 FROM base AS api
 
-RUN poetry install --with api
+RUN poetry install --only main,api
 
-CMD ["fastapi", "run", "cvepred/api.py"]
+CMD ["poetry", "run", "fastapi", "run", "cvepred/api.py"]
