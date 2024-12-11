@@ -48,5 +48,5 @@ jobs:
           tags: kpostekk/cvepred:latest
           target: api
           context: .
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # cache-from: type=gha
+          # cache-to: type=gha,mode=max
