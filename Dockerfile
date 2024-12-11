@@ -23,8 +23,14 @@ RUN poetry install --only main
 
 COPY cvepred /app/cvepred
 
+FROM base AS train
+
+RUN poetry run python3 -m cvepred.model
+
 FROM base AS api
 
 RUN poetry install --only main,api
+
+COPY --from=train /app/cvepred/cvepred_model.pkl /app/cvepred/cvepred_model.pkl
 
 CMD ["poetry", "run", "fastapi", "run", "cvepred/api.py"]

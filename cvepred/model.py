@@ -16,4 +16,5 @@ s = setup(
 cvepred_model = s.create_model("rf", verbose=False)
 
 if __name__ == "__main__":
+    s.save_model(cvepred_model, "cvepred_model")
     print(s.pull())

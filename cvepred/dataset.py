@@ -113,3 +113,6 @@ def create_train_datasets():
     print("Datasets created")
 
     return df_balanced_train, xdf_balanced_test
+
+if __name__ == '__main__':
+    print(create_dataset().dtypes)
