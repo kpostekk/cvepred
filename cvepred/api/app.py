@@ -6,7 +6,7 @@ from cvepred.base.dataset import (
     create_dataset_ids,
 )
 
-from cvepred.api.models import CveModels, CveNvdIdsModel
+from cvepred.api.models import CveModels, CveNvdIdsModel, CvePredictions
 from pycaret.classification import setup
 from scalar_fastapi import get_scalar_api_reference
 import pandas as pd
@@ -49,7 +49,7 @@ def sample(n: int) -> CveModels:
 
 
 @app.post("/predict")
-def predict(inputs: CveModels):
+def predict(inputs: CveModels) -> CvePredictions:
     df = pd.DataFrame(inputs.model_dump()["data"])
 
     # patch created df
@@ -66,13 +66,15 @@ def predict(inputs: CveModels):
         columns={"prediction_label": "label", "prediction_score": "score"}
     )[["label", "score"]]
 
-    predictions_compact.insert(0, "cve_opts", inputs.model_dump()["data"])
+    predictions_compact.insert(0, "inputModel", inputs.model_dump()["data"])
 
-    return predictions_compact.to_dict("records")
+    return CvePredictions.model_validate(
+        {"data": predictions_compact.to_dict("records")}
+    )
 
 
 @app.post("/predict/from-ids")
-def predict_from_id(inputs: CveNvdIdsModel):
+def predict_from_id(inputs: CveNvdIdsModel) -> CvePredictions:
     data = (
         samples_ids[samples_ids["cve_nvd_id"].isin(inputs.ids)]
         .drop(columns=["hasExploit", "cve_nvd_id"])
