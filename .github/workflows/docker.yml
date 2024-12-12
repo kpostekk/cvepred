@@ -59,7 +59,7 @@ jobs:
 
     environment:
       name: production
-      url: ${{ steps.deploy-to-webapp.outputs.container_url }}
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     needs: create-container
 
