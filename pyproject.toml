@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cvepred"
-version = "0.1.0"
+version = "1.0.0-0"
 description = ""
 authors = ["Your Name <you@example.com>"]
 readme = "README.md"
@@ -37,6 +37,7 @@ mkdocs-material = "^9.5.44"
 
 [tool.poetry.group.api.dependencies]
 fastapi = {extras = ["standard"], version = "^0.115.5"}
+scalar-fastapi = "^1.0.3"
 
 [build-system]
 requires = ["poetry-core"]
