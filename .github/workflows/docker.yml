@@ -19,6 +19,7 @@ permissions:
 
 jobs:
   create-container:
+    name: Create container
     runs-on: ubuntu-latest
 
     steps:
@@ -53,6 +54,7 @@ jobs:
           cache-to: type=gha,mode=max
 
   deploy:
+    name: Deploy to Azure
     runs-on: ubuntu-latest
 
     environment:
