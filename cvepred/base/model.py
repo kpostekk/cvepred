@@ -1,6 +1,7 @@
 from pycaret.classification import setup
 
-from cvepred.dataset import RANDOM_STATE, create_train_datasets
+from cvepred.base.dataset import RANDOM_STATE, create_train_datasets
+from pathlib import Path
 
 (df_train, df_test) = create_train_datasets()
 
@@ -16,5 +17,6 @@ s = setup(
 cvepred_model = s.create_model("rf", verbose=False)
 
 if __name__ == "__main__":
-    s.save_model(cvepred_model, "cvepred_model")
+    _, save_path = s.save_model(cvepred_model, "cvepred_model")
+    print(f"Model saved to {Path(save_path).resolve()}")
     print(s.pull())

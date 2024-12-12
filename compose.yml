@@ -4,6 +4,6 @@ services:
       context: .
       dockerfile: Dockerfile
       target: api
-    image: kpostekk/cvepred:notebook
+    image: kpostekk/cvepred:latest
     ports:
       - 8000:8000

@@ -2,7 +2,7 @@ import pandas as pd
 from imblearn.over_sampling import SMOTE, RandomOverSampler, ADASYN
 import typing
 
-from .nvd import create_sources
+from cvepred.base.nvd import create_sources
 
 RANDOM_STATE = 564127
 
@@ -102,15 +102,15 @@ def split_datasets(df: pd.DataFrame):
 
 
 def create_train_datasets():
-    print("Creating datasets...")
+    # print("Creating datasets...")
     df = create_dataset()
-    print("Encoding dataset...")
+    # print("Encoding dataset...")
     df_encoded = pd.get_dummies(df, dtype=int)
-    print("Balancing dataset...")
+    # print("Balancing dataset...")
     df_balanced = balanced_dataset(df_encoded, method="undersample")
-    print("Splitting dataset...")
+    # print("Splitting dataset...")
     df_balanced_train, xdf_balanced_test = split_datasets(df_balanced)
-    print("Datasets created")
+    # print("Datasets created")
 
     return df_balanced_train, xdf_balanced_test
 
