@@ -1,6 +1,6 @@
 from pycaret.classification import setup
 
-from .dataset import RANDOM_STATE, create_train_datasets
+from cvepred.dataset import RANDOM_STATE, create_train_datasets
 
 (df_train, df_test) = create_train_datasets()
 

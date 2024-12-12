@@ -81,6 +81,6 @@ def create_sources():
 
         df = pd.DataFrame(nvds_records)
 
-        df.to_csv(nvd_path, index=False)
+        df.to_csv(nvds_path, index=False)
 
     return pd.read_csv(nvds_path), pd.read_csv(cisa_kev_path)
