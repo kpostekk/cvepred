@@ -14,8 +14,8 @@ on:
       - main
 
 permissions:
-  contents: 'read'
-  packages: 'write'
+  contents: "read"
+  packages: "write"
 
 jobs:
   create-container:
@@ -55,6 +55,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    environment:
+      name: production
+      url: ${{ steps.deploy-to-webapp.outputs.container_url }}
+
     needs: create-container
 
     steps:
@@ -69,3 +73,10 @@ jobs:
           inlineScript: |
             az account show
 
+      - name: Deploy to Azure
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@2
+        with:
+          app-name: "cvepred"
+          publish-profile: ${{ secrets.AZ_PUBLISH_PROFILE }}
+          images: "ghcr.io/kpostekk/cvepred:latest"
