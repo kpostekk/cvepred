@@ -7,13 +7,7 @@ from cvepred.base.nvd import create_sources
 RANDOM_STATE = 564127
 
 
-def create_dataset():
-    """
-    Returns the cve exploit prediction dataset.
-
-    Performs a left join between the NVD and CISA KEV datasets.
-    ``cve_id`` is the index. ``hasExploit`` is the target variable.
-    """
+def create_dataset_ids():
     nvd_df, cisa_kev_df = create_sources()
 
     # Select only the cveID column
@@ -29,7 +23,6 @@ def create_dataset():
             right_on="cve_cisa_id",
         ).drop(
             columns=[
-                "cve_nvd_id",
                 "cve_cisa_id",
                 "vectorString",
                 "baseScore",
@@ -52,6 +45,11 @@ def create_dataset():
     df = df[~df.index.duplicated(keep="first")]
 
     return df
+
+
+def create_dataset():
+    df = create_dataset_ids()
+    return df.drop(columns=["cve_nvd_id"])
 
 
 def balanced_dataset(
@@ -114,5 +112,7 @@ def create_train_datasets():
 
     return df_balanced_train, xdf_balanced_test
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     print(create_dataset().dtypes)
+ 
