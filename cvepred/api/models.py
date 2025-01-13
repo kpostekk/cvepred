@@ -34,3 +34,12 @@ class CveNvdIdsModel(BaseModel):
             ]
         }
     }
+
+
+class CvePrediction(BaseModel):
+    inputModel: CveModel
+    label: ty.Literal[0, 1]
+    score: float
+
+class CvePredictions(BaseModel):
+    data: ty.List[CvePrediction]
